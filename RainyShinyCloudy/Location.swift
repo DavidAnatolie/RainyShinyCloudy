@@ -17,5 +17,5 @@ class Location {
     
     var lattitude: Double!
     var longitutde: Double!
-    var country: String!
+    var units = "metric"
 }
