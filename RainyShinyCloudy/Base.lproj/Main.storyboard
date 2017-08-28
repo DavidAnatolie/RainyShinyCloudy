@@ -33,6 +33,9 @@
                                                 <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
+                                                <variation key="heightClass=regular-widthClass=regular">
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                                                </variation>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23°" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ew0-Pe-JFe" userLabel="Current Temp">
                                                 <rect key="frame" x="0.0" y="30.5" width="146" height="159"/>
@@ -61,46 +64,19 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="-3" translatesAutoresizingMaskIntoConstraints="NO" id="XGq-oJ-kIw">
-                                        <rect key="frame" x="210" y="18" width="60.5" height="34"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hsY-Y0-Dy3">
-                                                <rect key="frame" x="0.0" y="0.0" width="30" height="34"/>
-                                                <state key="normal" title="°C"/>
-                                                <connections>
-                                                    <action selector="onCelsiusBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZVv-sw-liJ"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfX-l3-Cld">
-                                                <rect key="frame" x="27" y="0.0" width="6.5" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7f-ra-ff4">
-                                                <rect key="frame" x="30.5" y="0.0" width="30" height="34"/>
-                                                <state key="normal" title="°F">
-                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="onFahrenheitBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xdK-DG-b72"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.20606090128421783" green="0.59703302383422852" blue="0.91769671440124512" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="0WY-D2-b5s"/>
+                                    <constraint firstAttribute="height" constant="250" id="0WY-D2-b5s">
+                                        <variation key="heightClass=regular-widthClass=regular" constant="500"/>
+                                    </constraint>
                                     <constraint firstItem="ige-vQ-Kfz" firstAttribute="leading" secondItem="wsV-Ul-xck" secondAttribute="leading" constant="15" id="4jZ-4c-oU4"/>
                                     <constraint firstItem="nYL-qd-3gb" firstAttribute="centerY" secondItem="ew0-Pe-JFe" secondAttribute="centerY" id="9Kq-qf-LoP"/>
                                     <constraint firstAttribute="bottom" secondItem="ige-vQ-Kfz" secondAttribute="bottom" constant="10" id="FeE-c9-JOt"/>
                                     <constraint firstAttribute="trailing" secondItem="nYL-qd-3gb" secondAttribute="trailing" constant="15" id="Lhh-P7-7rs"/>
-                                    <constraint firstItem="XGq-oJ-kIw" firstAttribute="centerY" secondItem="A4i-t4-cd2" secondAttribute="centerY" id="VPm-Kc-Fxc"/>
                                     <constraint firstItem="goQ-pb-p72" firstAttribute="centerY" secondItem="Uoc-6l-uJK" secondAttribute="centerY" id="m8R-sq-tff"/>
                                     <constraint firstItem="ige-vQ-Kfz" firstAttribute="top" secondItem="wsV-Ul-xck" secondAttribute="top" constant="20" id="pFm-mf-gaq"/>
                                     <constraint firstItem="goQ-pb-p72" firstAttribute="centerX" secondItem="nYL-qd-3gb" secondAttribute="centerX" id="vQb-ZF-F4D"/>
-                                    <constraint firstItem="XGq-oJ-kIw" firstAttribute="centerX" secondItem="nYL-qd-3gb" secondAttribute="centerX" id="x5q-Ft-n4x"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="79" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wCN-i9-ep6">
@@ -122,10 +98,10 @@
                                                     </constraints>
                                                 </imageView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8I5-aG-Wya">
-                                                    <rect key="frame" x="73" y="15.5" width="284" height="47"/>
+                                                    <rect key="frame" x="73" y="15.5" width="323" height="47"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="YKg-yR-wVy">
-                                                            <rect key="frame" x="0.0" y="0.0" width="234" height="47"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="273" height="47"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Monday" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WRL-hS-3S4" userLabel="Day">
                                                                     <rect key="frame" x="0.0" y="0.0" width="68" height="23.5"/>
@@ -142,7 +118,7 @@
                                                             </subviews>
                                                         </stackView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="vlC-HD-fcq">
-                                                            <rect key="frame" x="234" y="0.0" width="50" height="47"/>
+                                                            <rect key="frame" x="273" y="0.0" width="50" height="47"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="28" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUC-3y-idv" userLabel="High">
                                                                     <rect key="frame" x="28" y="0.0" width="22" height="23.5"/>
@@ -199,8 +175,6 @@
                     <connections>
                         <outlet property="currentDateLbl" destination="A4i-t4-cd2" id="1A2-E7-XMZ"/>
                         <outlet property="currentTempLbl" destination="ew0-Pe-JFe" id="gYa-Iz-Pex"/>
-                        <outlet property="degreesCelsiusBtn" destination="hsY-Y0-Dy3" id="mLN-Xk-aFA"/>
-                        <outlet property="degreesFahrenheitBtn" destination="m7f-ra-ff4" id="oD4-5s-wtt"/>
                         <outlet property="locationLbl" destination="Uoc-6l-uJK" id="2Ll-MD-ZlW"/>
                         <outlet property="tableView" destination="wCN-i9-ep6" id="DoG-yB-Guv"/>
                         <outlet property="weatherImage" destination="nYL-qd-3gb" id="PQI-8z-Kqg"/>

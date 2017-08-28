@@ -17,5 +17,4 @@ class Location {
     
     var lattitude: Double!
     var longitutde: Double!
-    var units = "metric"
 }

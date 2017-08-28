@@ -89,6 +89,7 @@ class CurrentWeather {
             
             // Handle the response
             let result = response.result // response serialization result
+//            print(response)
             
             // serialized json response
             // Remember, type-checking and downcasting

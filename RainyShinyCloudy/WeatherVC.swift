@@ -19,8 +19,6 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var weatherTypeLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var degreesCelsiusBtn: UIButton!
-    @IBOutlet weak var degreesFahrenheitBtn: UIButton!
     
     // Location stuff...
     let locationManager = CLLocationManager()
@@ -124,24 +122,5 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
         locationLbl.text = "\(currentWeather.cityName), \(currentWeather.country)"
         weatherTypeLbl.text = currentWeather.weatherType
         weatherImage.image = UIImage(named: currentWeather.weatherThumbnail)
-        
-    }
-    
-    @IBAction func onCelsiusBtnPressed(_ sender: Any) {
-        tenDayForecast = [Forecast]()
-        degreesFahrenheitBtn.setTitleColor(UIColor.lightGray, for: UIControlState.normal)
-        degreesCelsiusBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
-        Location.sharedInstance.units = "metric"
-        downloadDataAndUpdateUI()
-    }
-    
-    
-    @IBAction func onFahrenheitBtnPressed(_ sender: Any) {
-        tenDayForecast = [Forecast]() // Reset array
-        degreesCelsiusBtn.setTitleColor(UIColor.lightGray, for: UIControlState.normal)
-        degreesFahrenheitBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
-        Location.sharedInstance.units = "imperial"
-        downloadDataAndUpdateUI()
     }
 }
-
