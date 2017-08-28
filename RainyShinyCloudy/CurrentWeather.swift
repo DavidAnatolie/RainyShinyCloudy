@@ -1,5 +1,6 @@
 //
 //  CurrentWeather.swift
+//  Get today's weather forecast
 //  RainyShinyCloudy
 //
 //  Created by David Islam on 2017-08-24.
@@ -82,10 +83,10 @@ class CurrentWeather {
     }
     
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
-        let currentWeatherURL = URL(string: CURRENT_WEATHER_URL)!
         
         // Use Alamofire to extract JSON data
         Alamofire.request(currentWeatherURL).responseJSON {response in
+            
             // Handle the response
             let result = response.result // response serialization result
             

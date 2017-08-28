@@ -27,23 +27,19 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
     var currentLocation: CLLocation!
     
     // Weather stuff...
-    var currentWeather: CurrentWeather!
+    var currentWeather = CurrentWeather()
     var tenDayForecast = [Forecast]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        tableView.delegate = self
+        tableView.dataSource = self
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startMonitoringSignificantLocationChanges()
         locationManager.requestLocation()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -52,32 +48,20 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
         // Save the location data
         Location.sharedInstance.lattitude = userLocation.coordinate.latitude
         Location.sharedInstance.longitutde = userLocation.coordinate.longitude
-        
-        currentWeather = CurrentWeather()
-        currentWeather.downloadWeatherDetails {
-            self.downloadForecast {
-                self.updateMainUI()
-            }
-        }
+        downloadDataAndUpdateUI()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // Hardwire longitude and lattiude coor to Vancouver in case location is denied
         Location.sharedInstance.lattitude = 49.25
         Location.sharedInstance.longitutde = -123.12
-        currentWeather = CurrentWeather()
-        currentWeather.downloadWeatherDetails {
-            self.downloadForecast {
-                self.updateMainUI()
-            }
-        }
+        downloadDataAndUpdateUI()
     }
     
     func downloadForecast(completed: @escaping DownloadComplete) {
         
         // Download forecast weather for the table view
         // Use a similar approach to CurrentWeather
-        let forecastURL = URL(string: FORECAST_URL)!
         
         Alamofire.request(forecastURL).responseJSON{response in // Closure to capture the response from server
             
@@ -101,10 +85,12 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
     }
     
     func downloadDataAndUpdateUI() {
-
-
+        currentWeather.downloadWeatherDetails {
+            self.downloadForecast {
+                self.updateMainUI()
+            }
+        }
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -146,12 +132,7 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
         degreesFahrenheitBtn.setTitleColor(UIColor.lightGray, for: UIControlState.normal)
         degreesCelsiusBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
         Location.sharedInstance.units = "metric"
-        currentWeather = CurrentWeather()
-        currentWeather.downloadWeatherDetails {
-            self.downloadForecast {
-                self.updateMainUI()
-            }
-        }
+        downloadDataAndUpdateUI()
     }
     
     
@@ -160,29 +141,7 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
         degreesCelsiusBtn.setTitleColor(UIColor.lightGray, for: UIControlState.normal)
         degreesFahrenheitBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
         Location.sharedInstance.units = "imperial"
-        currentWeather = CurrentWeather()
-        currentWeather.downloadWeatherDetails {
-            self.downloadForecast {
-                self.updateMainUI()
-            }
-        }
+        downloadDataAndUpdateUI()
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
 

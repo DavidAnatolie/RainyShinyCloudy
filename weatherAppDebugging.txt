@@ -1,0 +1,59 @@
+API_KEY = "b91632ecd31c8caf986e6c39ba5941dd"
+
+The constant file containing the URL constants would still work provided the CoreLocation services is implemented properly. Remember, CoreLocation request location to get the user's coordinates is an Asynchronous process which means your code will likely proceed while corelocation is trying to get the location coordinates. This means that it is possible for you application to reach the Alamofire request part before corelocation could get the location coordinates and initialize the singleton class variables. This will crash the app because Alamofire would then throw an error OR your constant file will show error for nil  value for the latitude and longitude variables. The proper way to get the location coordinate from CoreLocation's locatioManager is using the requestlocation()  inbuilt method and handle the API call only after the location update occurs using didUpdateLocations  or handle errors in case core location is unable to obtain location coordinates using didFailWithError in which case you can hard code a default coordinates to the singleton class variables in order to prevent a crash from happening and also show a default location. This will also help if the user selects not to enable location services when prompted by locationManager.requestWhenInUseAuthorization() . So the code would look like below in the ViewController-
+
+
+override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        locationAuthStatus()
+    }
+ 
+func locationAuthStatus(){
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse{
+            locationManager.requestLocation() //implements didUpdateLocations delegate see below
+            
+        }else{
+            locationManager.requestWhenInUseAuthorization()
+            locationAuthStatus() //recursive
+        }
+    }
+    
+func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation //an array of CLLocations
+        
+        //currentLocation = locationManager.location
+        Location.sharedInstance.latitude = userLocation.coordinate.latitude
+        Location.sharedInstance.longitude = userLocation.coordinate.longitude
+        
+        //update UI with new data
+        currentWeather = CurrentWeather()
+        currentWeather.downloadWeatherDetails{
+            //update ui
+            self.forecast = ForecastVC()
+            self.forecast.downloadForecastData{
+                //Update UI
+                self.forecastsArray = self.forecast.forecast
+                self.tableView.reloadData()
+                self.updateMainUI()
+            }
+        }
+    }
+ 
+func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        //If requestLocation() fails then default to San Francisco Coordinates
+        Location.sharedInstance.latitude = 37.785834
+        Location.sharedInstance.longitude = -122.406417
+        
+        //Update UI with default data
+        currentWeather = CurrentWeather()
+        currentWeather.downloadWeatherDetails{
+            //update ui
+            self.forecast = ForecastVC()
+            self.forecast.downloadForecastData{
+                //Update UI
+                self.forecastsArray = self.forecast.forecast
+                self.tableView.reloadData()
+                self.updateMainUI()
+            }
+        }
+    }
