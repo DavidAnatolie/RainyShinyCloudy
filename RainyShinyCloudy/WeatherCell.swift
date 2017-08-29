@@ -16,23 +16,11 @@ class WeatherCell: UITableViewCell {
     @IBOutlet weak var highLbl: UILabel!
     @IBOutlet weak var lowLbl: UILabel!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-    
     func updateUI(forecast: Forecast) {
         thumbnail.image = UIImage(named: "\(forecast.thumbnail) Mini")
         dayLbl.text = forecast.day
         typeLbl.text = forecast.type
-        highLbl.text = forecast.high
-        lowLbl.text = forecast.low
+        highLbl.text = "\(Int(round(forecast.high)))"
+        lowLbl.text = "\(Int(round(forecast.low)))"
     }
-
 }

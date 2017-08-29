@@ -1,5 +1,6 @@
 //
 //  Constants.swift
+//  Setup URLs alongside with other things...
 //  RainyShinyCloudy
 //
 //  Created by David Islam on 2017-08-24.

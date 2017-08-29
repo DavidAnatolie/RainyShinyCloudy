@@ -43,6 +43,8 @@ class CurrentWeather {
                 _currentTemp = 0.0
             }
             return _currentTemp
+        } set {
+            _currentTemp = newValue
         }
     }
     
@@ -87,20 +89,14 @@ class CurrentWeather {
         // Use Alamofire to extract JSON data
         Alamofire.request(currentWeatherURL).responseJSON {response in
             
-            // Handle the response
-            let result = response.result // response serialization result
-//            print(response)
-            
             // serialized json response
             // Remember, type-checking and downcasting
-            if let dict = result.value as? Dictionary<String, Any> {
+            if let dict = response.result.value as? Dictionary<String, Any> {
                 
-                // cityName
                 if let name = dict["name"] as? String {
                     self._cityName = name.capitalized
                 }
                 
-                // weatherType and weatherThumbnail
                 if let weather = dict["weather"] as? [Dictionary<String, Any>] {
                     
                     if let main = weather[0]["main"] as? String {
@@ -112,15 +108,13 @@ class CurrentWeather {
                     }
                 }
                 
-                // currentTemp
                 if let main = dict["main"] as? Dictionary<String, Double> {
                     
                     if let temp = main["temp"] {
-                        self._currentTemp = round(temp)
+                        self._currentTemp = temp
                     }
                 }
                 
-                // country
                 if let sys = dict["sys"] as? Dictionary<String, Any> {
                     
                     if let country = sys["country"] as? String {

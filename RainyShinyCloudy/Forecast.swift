@@ -14,39 +14,31 @@ class Forecast {
     
     private var _day: String!
     private var _type: String!
-    private var _high: String!
-    private var _low: String!
+    private var _high: Double!
+    private var _low: Double!
     private var _thumbnail: String!
     
     init(dailyForecast: Dictionary<String, Any>) {
     
         if let temp = dailyForecast["temp"] as? Dictionary<String, Double> {
             
-            // high
-            if let max = temp["max"] {
-                self._high = "\(Int(round(max)))"
-            }
-            
-            // low
-            if let min = temp["min"] {
-                self._low = "\(Int(round(min)))"
+            if let max = temp["max"], let min = temp["min"] {
+                self._high = max
+                self._low = min
             }
         }
         
         if let weather = dailyForecast["weather"] as? [Dictionary<String, Any>] {
             
-            // type
             if let description = weather[0]["description"] as? String {
                 self._type = description.capitalized
             }
             
-            // thumbnail
             if let main = weather[0]["main"] as? String {
                 self._thumbnail = main.capitalized
             }
         }
-        
-        // Day of week
+
         if let dt = dailyForecast["dt"] as? Double {
             
             let convertedDate = Date(timeIntervalSince1970: dt) // Unix timestamp
@@ -72,21 +64,25 @@ class Forecast {
         }
     }
     
-    var high: String {
+    var high: Double {
         get {
             if _high == nil {
-                _high = ""
+                _high = 0.0
             }
             return _high
+        } set {
+            _high = newValue
         }
     }
     
-    var low: String {
+    var low: Double {
         get {
             if _low == nil {
-                _low = ""
+                _low = 0.0
             }
             return _low
+        } set {
+            _low = newValue
         }
     }
     

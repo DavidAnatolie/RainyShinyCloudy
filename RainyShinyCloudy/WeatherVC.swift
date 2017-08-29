@@ -19,12 +19,11 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
     @IBOutlet weak var weatherImage: UIImageView!
     @IBOutlet weak var weatherTypeLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var fahrenheitBtn: UIButton!
+    @IBOutlet weak var celsiusBtn: UIButton!
     
-    // Location stuff...
+
     let locationManager = CLLocationManager()
-    var currentLocation: CLLocation!
-    
-    // Weather stuff...
     var currentWeather = CurrentWeather()
     var tenDayForecast = [Forecast]()
 
@@ -36,42 +35,53 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
-        locationManager.startMonitoringSignificantLocationChanges()
         locationManager.requestLocation()
+        
+        celsiusBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
+        fahrenheitBtn.setTitleColor(UIColor.darkGray, for: UIControlState.normal)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let userLocation = locations[0]
-        
-        // Save the location data
-        Location.sharedInstance.lattitude = userLocation.coordinate.latitude
-        Location.sharedInstance.longitutde = userLocation.coordinate.longitude
-        downloadDataAndUpdateUI()
+        if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            let userLocation = locations[0]
+
+            // Save the location data
+            Location.sharedInstance.lattitude = userLocation.coordinate.latitude
+            Location.sharedInstance.longitutde = userLocation.coordinate.longitude
+            currentWeather.downloadWeatherDetails {
+                self.downloadForecast {
+                    self.updateMainUI()
+                }
+            }
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.requestLocation()
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // Hardwire longitude and lattiude coor to Vancouver in case location is denied
         Location.sharedInstance.lattitude = 49.25
         Location.sharedInstance.longitutde = -123.12
-        downloadDataAndUpdateUI()
+        currentWeather.downloadWeatherDetails {
+            self.downloadForecast {
+                self.updateMainUI()
+            }
+        }
     }
     
     func downloadForecast(completed: @escaping DownloadComplete) {
-        
+        tenDayForecast = [Forecast]()
         // Download forecast weather for the table view
         // Use a similar approach to CurrentWeather
-        
         Alamofire.request(forecastURL).responseJSON{response in // Closure to capture the response from server
             
-            let result = response.result
-            
-            if let dict = result.value as? Dictionary<String, Any> {
+            if let dict = response.result.value as? Dictionary<String, Any> {
                 
                 if let list = dict["list"] as? [Dictionary<String, Any>] {
                     
                     for day in list {
-                        let forecast = Forecast(dailyForecast: day)
-                        self.tenDayForecast.append(forecast)
+                        self.tenDayForecast.append(Forecast(dailyForecast: day))
                     }
                     
                     self.tenDayForecast.removeFirst() // We start from the next day
@@ -80,19 +90,6 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
             }
             completed()
         }
-    }
-    
-    func downloadDataAndUpdateUI() {
-        currentWeather.downloadWeatherDetails {
-            self.downloadForecast {
-                self.updateMainUI()
-            }
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -110,7 +107,6 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
             cell.updateUI(forecast: todaysForecast)
             
             return cell
-            
         } else {
             return WeatherCell()
         }
@@ -118,9 +114,47 @@ class WeatherVC: UIViewController, UITableViewDelegate, UITableViewDataSource, C
     
     func updateMainUI() {
         currentDateLbl.text = currentWeather.date
-        currentTempLbl.text = "\(Int(currentWeather.currentTemp))°"
+        currentTempLbl.text = "\(Int(round(currentWeather.currentTemp)))°"
         locationLbl.text = "\(currentWeather.cityName), \(currentWeather.country)"
         weatherTypeLbl.text = currentWeather.weatherType
         weatherImage.image = UIImage(named: currentWeather.weatherThumbnail)
+    }
+    
+    @IBAction func celsiusBtnPressed(_ sender: Any) {
+        if celsiusBtn.currentTitleColor == UIColor.darkGray {
+            
+            // Update currentTemp
+            currentWeather.currentTemp = (currentWeather.currentTemp - 32) / 1.8
+            currentTempLbl.text = "\(Int(round(currentWeather.currentTemp)))º"
+            
+            // Update forecast
+            for day in tenDayForecast {
+                day.high = (day.high - 32) / 1.8
+                day.low = (day.low - 32) / 1.8
+            }
+            tableView.reloadData()
+
+            fahrenheitBtn.setTitleColor(UIColor.darkGray, for: UIControlState.normal)
+            celsiusBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
+        }
+    }
+    
+    @IBAction func fahrenheitBtnPressed(_ sender: Any) {
+        if fahrenheitBtn.currentTitleColor == UIColor.darkGray {
+            
+            // Update currentTemp
+            currentWeather.currentTemp = currentWeather.currentTemp * 1.8 + 32
+            currentTempLbl.text = "\(Int(round(currentWeather.currentTemp)))º"
+            
+            // Update forecast
+            for day in tenDayForecast {
+                day.high = day.high * 1.8 + 32
+                day.low = day.low * 1.8 + 32
+            }
+            tableView.reloadData()
+            
+            fahrenheitBtn.setTitleColor(UIColor.white, for: UIControlState.normal)
+            celsiusBtn.setTitleColor(UIColor.darkGray, for: UIControlState.normal)
+        }
     }
 }
